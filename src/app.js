@@ -1,4 +1,6 @@
-require('dotenv').config();
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
+});
 const connect = require('./config/database');
 connect();
 const express = require('express'); //importando o express
@@ -23,10 +25,5 @@ app.use('/posts', postsRoutes);
 app.get('/', (req, res) => {
     res.send('API funcionando');
 });
-
-app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
-
 
 module.exports = app;
