@@ -1,103 +1,104 @@
+const postService = require('../services/post.services');
+const Post = require('../models/Post');
 
-//Dados fictícios para get postsId
-const posts = [
-  { id: 1, titulo: 'Bem-vindos ao blog!', conteudo: 'Este é o primeiro post.', autor: 'Prof. João' },
-  { id: 2, titulo: 'Dicas de estudo', conteudo: 'Estudar com rotina ajuda muito.', autor: 'Profª. Ana' }
-];
-
-//Função para pesquisar post - GET SEARCH
-function buscarPost(req,res) {
-  const termo = req.query.termo;
-
-  if (!termo) {
-    return res.status(400).json({mensagem: 'Parâmetro "termo" é obrigatório na busca'})
+//GET SEARCH/ID - Passa para o service
+const buscarPost = async (req, res) => {
+  try {
+    const { termo } = req.query;
+    const resultados = await postService.buscarPostService(termo); //Busca na lógica do post.service.js
+    res.json(resultados);
+  } catch (erro) {
+    if (erro.message.includes('obrigatório')) {
+      return res.status(400).json({ mensagem: erro.message });
+    }
+    console.error('Erro ao buscar posts:', erro);
+    res.status(500).json({ mensagem: 'Erro interno ao buscar posts' });
   }
-
-  const termoMinusculo = termo.toLowerCase();
-
-  const resultados = posts.filter(post => 
-    post.titulo.toLowerCase().includes(termoMinusculo) ||
-    post.conteudo.toLowerCase().includes(termoMinusculo)
-  );
-
-  res.json(resultados);
-}
-
-
-//Função para deletar post - DELETE
-function excluirPost(req, res) {
-  const id = parseInt(req.params.id);
-  const index = posts.findIndex(post => post.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({mensagem: 'Post não encontrado'});
-  };
-
-  posts.splice(index, 1);
-
-  res.status(204).send();
-}
-
-
-//Função para atualizar post - PUT
-function atualizarPost(req,res) {
-  const id = parseInt(req.params.id);
-  const {titulo, conteudo, autor} = req.body;
-  const post = posts.find(post => post.id === id);
-
-  if (!post) {
-    return res.status(400).json({ mensagem: 'Post não encontrado'});
-  }
-
-  if (titulo) post.titulo = titulo;
-  if (conteudo) post.conteudo = conteudo;
-  if (autor) post.autor = autor;
-
-  res.json(post);
-}
-
-
-//Função para criar post - POST
-function criarPosts(req,res) {
-  const {titulo, conteudo} = req.body;
-  const autor = req.user.nome;
-  console.log(req.user);
-
-  if (!titulo || !conteudo) {
-    return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.'});
-}
-
-const novoPost = {
-  id: posts.length + 1,
-  titulo,
-  conteudo,
-  autor
 };
 
-posts.push(novoPost);
 
-res.status(201).json(novoPost);
-}
+//DELETE /POST - Passa para o service
+const excluirPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await postService.excluirPostService(id);
+    res.status(204).send();
 
-
-
-//Função para mostrar lista de posts - GET
-function listarPosts(req, res) {
-    res.send('Lista de Posts');
-}
-
-
-//Função para mostrar posts unitários - GET BY ID
-function mostrarPosts(req, res) {
-    const id = parseInt(req.params.id); // captura o ID e converte para o número
-    const postEncontrado = posts.find(posts => posts.id === id);
-
-    if (!postEncontrado) {
-    return res.status(404).send('Post não encontrado');
+  } catch (erro) {
+    if (erro.message === 'Post não encontrado') {
+      return res.status(404).json({ mensagem: erro.message });
+    }
+    console.error('Erro ao excluir post:', erro);
+    res.status(500).json({ mensagem: 'Erro interno ao excluir Post.' });
   }
+};
 
-  res.json(postEncontrado);
-}
+
+//PUT /POST - Passa para o service
+const atualizarPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dados = req.body;
+
+    const postAtualizado = await postService.atualizarPostService(id, dados); //Puxa informações do Service
+
+    res.json(postAtualizado);//Envia resposta
+
+  } catch (erro) {
+    if (erro.message === 'Post não encontrado') {
+      return res.status(404).json({ mensagem: erro.message });
+    }
+    console.error('Erro ao atualizar post:', erro);
+    res.status(500).json({ mensagem: 'Erro interno ao atualizar post' });
+  }
+};
+
+
+//POST /POST
+const criarPosts = async (req, res) => {
+  try {
+    const dadosDoPost = req.body;
+    const dadosDoUsuario = req.user;
+
+    const novoPost = await postService.criarPostService(dadosDoPost, dadosDoUsuario); //Service
+
+    res.status(201).json(novoPost);
+
+  } catch (erro) {
+      if (erro.message.includes('obrigatórios')) {
+      return res.status(400).json({ mensagem: erro.message }); // 400 = Bad Request
+    }
+    console.error('Erro ao criar Post:', erro);
+    res.status(500).json({ mensagem: 'Erro interno ao criar Post.' });
+  }
+};
+
+
+
+// GET e GET BY ID - passa para o service
+const listarPosts = async (req, res) => {
+  try {
+    const posts = await postService.listarPostsService();
+    res.json(posts);
+  } catch (erro) {
+    console.error('Erro ao listar posts:', erro);
+    res.status(500).json({ mensagem: 'Erro interno ao buscar posts' });
+  }
+};
+
+const mostrarPosts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await postService.mostrarPostPorIdService(id);
+    res.json(post);
+  } catch (erro) {
+    if (erro.message === 'Post não encontrado') {
+      return res.status(404).json({ mensagem: erro.message });
+    }
+    console.error('Erro ao buscar post por ID:', erro);
+    res.status(500).json({ mensagem: 'Erro interno ao buscar post' });
+  }
+};
 
 module.exports = {
     listarPosts,

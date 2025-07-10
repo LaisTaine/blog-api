@@ -1,7 +1,7 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { users } = require('./users.controller');
+const User = require('../models/User');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -9,7 +9,7 @@ async function login(req,res) {
     const { nome, senha } = req.body;
         console.log('Tentativa de login:', nome, senha);
 
-    const usuario = users.find(u => u.nome === nome);
+    const usuario = await User.findOne({nome});
     console.log('Usuário não encontrado');
     if (!usuario) {
         return res.status(400).json({mensagem: 'Credenciais inválidas'});
