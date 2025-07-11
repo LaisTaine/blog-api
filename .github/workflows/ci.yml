@@ -2,27 +2,22 @@ name: CI - Testes Automatizados
 
 on:
   push:
-  branches: [ main ]
-  
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do Repositório
         uses: actions/checkout@v3
-    
       - name: Setup do Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
       - name: Instalar Dependências
         run: npm install
-
       - name: Rodar os Testes com Cobertura
         run: npm run test:coverage
         env:
