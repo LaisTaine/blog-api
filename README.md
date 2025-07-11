@@ -40,7 +40,7 @@ Siga os passos abaixo para configurar e executar a aplicação localmente usando
     ```
 
 3.  **Configure as Variáveis de Ambiente:**
-    Crie um ficheiro chamado `.env` na raiz do projeto. Preencha com as suas variáveis, como:
+    Crie um ficheiro chamado `.env` na raiz do projeto. Preencha com as variáveis, como:
     ```
     MONGO_URI=mongodb://mongo:27017/blog-api
     JWT_SECRET=chaveSuperSecreta
