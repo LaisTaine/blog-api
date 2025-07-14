@@ -49,7 +49,17 @@ const criarUsuarioPeloAdminService = async (dadosDoNovoUsuario) => {
     if (existe) {
         throw new Error('Nome de utilizador já cadastrado');
     }
-}
+
+    const senhaHash = await bcrypt.hash(senha, 10);
+
+    const novoUsuario = await User.create({
+        nome,
+        senhaHash,
+        perfil 
+    });
+
+    return novoUsuario;
+};
 
 
 const listarTodosUsuariosService = async () => {

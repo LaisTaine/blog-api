@@ -7,6 +7,9 @@ yarn-error.log*
 # Environment variables
 .env
 
+# Relatórios de cobertura de teste
+/coverage
+
 # VS Code
 .vscode/
 
