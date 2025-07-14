@@ -5,10 +5,7 @@ require('dotenv').config({
 
 async function connect() {
     try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewURLParser: true,
-            useUnifiedTopology: true
-        });
+        await mongoose.connect(process.env.MONGO_URI);
         
         console.log('🟢 Conectado ao MongoDB com sucesso!');
 
