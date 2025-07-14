@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "cross-env NODE_ENV=test jest --watchAll",
-    "test:once": "cross-env NODE_ENV=test jest",
-    "test:coverage": "cross-env NODE_ENV=test jest --coverage",
+    "test": "cross-env NODE_ENV=test jest --watchAll --runInBand",
+    "test:once": "cross-env NODE_ENV=test jest --runInBand",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage --runInBand",
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
