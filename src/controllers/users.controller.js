@@ -4,7 +4,12 @@ const userService = require('../services/user.services');
 const criarUsuarioPeloAdmin = async (req, res) => {
     try {
         const novoUsuario = await userService.criarUsuarioPeloAdminService(req.body);
-        res.status(201).json(novoUsuario);
+        
+        res.status(201).json({
+            id: novoUsuario._id,
+            nome: novoUsuario.nome,
+            perfil: novoUsuario.perfil
+        });
     } catch (erro) {
         res.status(400).json({ mensagem: erro.message });
     }
