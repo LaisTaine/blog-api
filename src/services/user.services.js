@@ -68,8 +68,18 @@ const listarTodosUsuariosService = async () => {
 };
 
 
+const deletarUsuarioService = async (id) => {
+  const utilizador = await User.findByIdAndDelete(id);
+
+  if (!utilizador) {
+    throw new Error('Utilizador não encontrado');
+  }
+};
+
+
 module.exports = {
     cadastrarUsuarioService,
     criarUsuarioPeloAdminService,
-    listarTodosUsuariosService
+    listarTodosUsuariosService,
+    deletarUsuarioService
 }

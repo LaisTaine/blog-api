@@ -15,5 +15,8 @@ router.get('/', ensureAuth, onlyAdmin, userController.listarUsuarios);
 // POST /usuarios/admin/criar -> Cria um novo utilizador com um perfil específico (só para admins).
 router.post('/admin/criar', ensureAuth, onlyAdmin, userController.criarUsuarioPeloAdmin);
 
+// DELETE /usuarios/:id -> Apaga um utilizador específico (só para admins).
+router.delete('/:id', ensureAuth, onlyAdmin, userController.deletarUsuario);
+
 
 module.exports = router;

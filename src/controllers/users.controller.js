@@ -50,8 +50,26 @@ const listarUsuarios = async (req, res) => {
   }
 };
 
+const deletarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await userService.deletarUsuarioService(id);
+
+    res.status(204).send();
+  } catch (erro) {
+    if (erro.message === 'Utilizador não encontrado') {
+      return res.status(404).json({ mensagem: erro.message }); 
+    }
+    
+    console.error('Erro ao apagar utilizador:', erro);
+    res.status(500).json({ mensagem: 'Ocorreu um erro interno.' });
+  }
+};
+
 module.exports = { 
   cadastrarUsuario, 
   criarUsuarioPeloAdmin,
-  listarUsuarios
+  listarUsuarios,
+  deletarUsuario
 };
