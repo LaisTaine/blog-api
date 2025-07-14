@@ -2,6 +2,7 @@ const userService = require('../services/user.services');
 
 
 const criarUsuarioPeloAdmin = async (req, res) => {
+    console.log('✅ EXECUTANDO: criarUsuarioPeloAdmin'); // Pista 1
     try {
         const novoUsuario = await userService.criarUsuarioPeloAdminService(req.body);
         
@@ -17,6 +18,7 @@ const criarUsuarioPeloAdmin = async (req, res) => {
 
 
 const cadastrarUsuario = async (req, res) => {
+  console.log('❌ EXECUTANDO: cadastrarUsuario'); // Pista 2
   try {
     const usuarioCriado = await userService.cadastrarUsuarioService(req.body);
 
