@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema(
     },
     perfil: {
       type: String,
-      enum: ['aluno', 'professor'],
+      enum: ['aluno', 'professor', 'admin'],
+      default: 'aluno',
       required: true
     }
   },

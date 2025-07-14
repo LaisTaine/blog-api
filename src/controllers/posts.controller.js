@@ -1,5 +1,7 @@
 const postService = require('../services/post.services');
 const Post = require('../models/Post');
+const userService = require('../services/user.services');
+
 
 //GET SEARCH/ID - Passa para o service
 const buscarPost = async (req, res) => {
@@ -100,11 +102,12 @@ const mostrarPosts = async (req, res) => {
   }
 };
 
+
 module.exports = {
     listarPosts,
     mostrarPosts,
     criarPosts, 
     atualizarPost,
     excluirPost,
-    buscarPost
+    buscarPost,
 }
